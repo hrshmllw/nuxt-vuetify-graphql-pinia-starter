@@ -2,8 +2,7 @@
 	<v-container>
 		<h3 class="my-5">SpaceX Mission List</h3>
 		<v-select v-model="selectedYear" :items="availableYears" clearable label="Filter by Year" />
-
-		<v-btn class="mb-3" @click="toggleSortDirection">
+		<v-btn class="mb-3" color="primary" @click="toggleSortDirection">
 			{{ sortDirection === 'asc' ? 'Ascending' : 'Descending' }}
 		</v-btn>
 
