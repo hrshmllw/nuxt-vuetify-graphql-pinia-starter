@@ -1,13 +1,13 @@
 interface Launch {
-	mission_name: String
+	mission_name: string
 	launch_date_utc: Date
 	launch_site: {
-		site_name: String
+		site_name: string
 	}
 	rocket: {
-		rocket_name: String
+		rocket_name: string
 	}
-	details: String
+	details: string
 }
 
 export default function useLaunchesSort(launches: Ref<Launch[]>) {

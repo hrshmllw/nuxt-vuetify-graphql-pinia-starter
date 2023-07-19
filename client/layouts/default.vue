@@ -1,6 +1,9 @@
 <template>
 	<v-app>
 		<v-app-bar color="primary">
+			<template #prepend>
+				<v-icon icon="mdi-nuxt" />
+			</template>
 			<v-app-bar-title>Nuxt 3-Vuetify-GraphQL-Pinia Starter</v-app-bar-title>
 			<template #append>
 				<v-btn to="/">HOME</v-btn>

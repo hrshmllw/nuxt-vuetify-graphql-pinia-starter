@@ -5,26 +5,37 @@
 		<v-btn class="mb-3" color="primary" @click="toggleSortDirection">
 			{{ sortDirection === 'asc' ? 'Ascending' : 'Descending' }}
 		</v-btn>
+		<v-btn class="mb-3 ml-2" to="/favorites">View Favorites</v-btn>
 
 		<p>There are {{ filteredLaunches.length || 0 }} missions.</p>
 
 		<v-table>
 			<thead>
 				<tr>
-					<th class="text-left">Mission Name</th>
-					<th class="text-left">Launch Date</th>
-					<th class="text-left">Launch Site</th>
-					<th class="text-left">Rocket Name</th>
-					<th class="text-left">Details</th>
+					<th class="text-center">Mission Name</th>
+					<th class="text-center">Launch Date</th>
+					<th class="text-center">Site</th>
+					<th class="text-center w-25">Rocket Name</th>
+					<th class="text-center">Details</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr v-for="launch in sortedLaunches" :key="(launch.mission_name as string)">
-					<td>{{ launch.mission_name }}</td>
-					<td>{{ launch.launch_date_utc }}</td>
-					<td>{{ launch.launch_site ? launch.launch_site.site_name : 'N/A' }}</td>
-					<td>{{ launch.rocket ? launch.rocket.rocket_name : 'N/A' }}</td>
-					<td>{{ launch.details ? launch.details : 'N/A' }}</td>
+					<td class="text-center">{{ launch.mission_name }}</td>
+					<td class="text-center">{{ launch.launch_date_utc }}</td>
+					<td class="text-center">
+						{{ launch.launch_site ? launch.launch_site.site_name : 'N/A' }}
+					</td>
+					<td class="text-center">
+						{{ launch.rocket ? launch.rocket.rocket_name : 'N/A' }}
+						<v-icon
+							:color="isFavorite(launch.rocket?.rocket_name) ? 'yellow' : ''"
+							@click="toggleFavorite(launch.rocket?.rocket_name)"
+						>
+							{{ isFavorite(launch.rocket?.rocket_name) ? 'mdi-star' : 'mdi-star-outline' }}
+						</v-icon>
+					</td>
+					<td class="text-center">{{ launch.details ? launch.details : 'N/A' }}</td>
 				</tr>
 			</tbody>
 		</v-table>
@@ -34,6 +45,7 @@
 <script lang="ts">
 import useLaunchesFilter from '@/composables/useLaunchesFilter'
 import useLaunchesSort from '@/composables/useLaunchesSort'
+import { useFavoritesStore } from '@/stores/useFavoritesStore'
 
 export default {
 	setup() {
@@ -83,6 +95,16 @@ export default {
 			return Array.from(years)
 		})
 
+		const favoriteStore = useFavoritesStore()
+		const isFavorite = (rocketName: string) => favoriteStore.getFavoriteRockets.includes(rocketName)
+
+		const toggleFavorite = (rocketName: string) => {
+			if (isFavorite(rocketName)) {
+				favoriteStore.removeFavoriteRocket(rocketName)
+			} else {
+				favoriteStore.addFavoriteRocket(rocketName)
+			}
+		}
 		return {
 			selectedYear,
 			filteredLaunches,
@@ -90,6 +112,8 @@ export default {
 			sortDirection,
 			sortedLaunches,
 			toggleSortDirection,
+			isFavorite,
+			toggleFavorite,
 		}
 	},
 }
